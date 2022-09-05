@@ -1,8 +1,0 @@
----
-title: "R Notebook"
-output: md_document
----
-
-```{r}
-usethis::use_git_
-```
