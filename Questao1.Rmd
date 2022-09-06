@@ -1,13 +1,14 @@
 ---
-title: "README"
+title: "Notebook"
 author: Walter Melhado Arbiol Forne
 date: 5 de Setembro de 2022
-output: md_document
+output: html_notebook
 ---
 
-Automatic analize:
+Automatic analysis:
 
 ```{r}
+dev.off(dev.list()["RStudioGD"])
 rm(list=ls())
 cat("\f")
 library(tidyverse)
