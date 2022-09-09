@@ -2,13 +2,12 @@
 title: "Notebook"
 author: Walter Melhado Arbiol Forne
 date: 5 de Setembro de 2022
-output: html_notebook
+output: pdf_document
 ---
 
 Automatic analysis:
 
 ```{r}
-dev.off(dev.list()["RStudioGD"])
 rm(list=ls())
 cat("\f")
 library(tidyverse)
@@ -61,13 +60,15 @@ analize <- function(stdpoors, preco_fechamento, name){
              geom_line() +
              labs(title=paste("Gráfico do Ativo ", name), subtitle="Preço de Fechamento", 
              caption="Fonte: https://finance.yahoo.com/", x = "Data ", y="Preço (R$)") +
-             theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
+             theme(plot.title = element_text(hjust = 0.5), plot.subtitle = 
+                     element_text(hjust = 0.5)) +
              scale_x_date(date_labels = "%b %y", date_breaks = "1 month")
     }
     plotFechamento(stdpoors, name)
   }
   #Calcule o Retorno, com base no Preço de Fechamento
-  retorno_pf <- (preco_fechamento - shift(preco_fechamento, 1L, type="lag"))/shift(preco_fechamento, 1L, type="lag")
+  retorno_pf <- (preco_fechamento - shift(preco_fechamento, 1L, type="lag"))/
+    shift(preco_fechamento, 1L, type="lag")
   retorno_pf <- na.omit(retorno_pf)
   tabela_preco_retorno <- cbind(preco_fechamento, retorno_pf)
   print("7. Calcule o Retorno, com base no Preço de Fechamento:")
@@ -80,7 +81,8 @@ analize <- function(stdpoors, preco_fechamento, name){
            geom_line() +
            labs(title=title, subtitle="Retorno", caption="Fonte: https://finance.yahoo.com/", 
            x = "Data ", y="Retorno (%)") +
-           theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
+           theme(plot.title = element_text(hjust = 0.5), plot.subtitle =
+                   element_text(hjust = 0.5)) +
            scale_x_date(date_labels = "%b %y", date_breaks = "1 month")
     }
     plotRetorno(name)
@@ -102,8 +104,10 @@ analize <- function(stdpoors, preco_fechamento, name){
                            scale_y_continuous(breaks = seq(-5, 23, by = 1))
     
     boxplots_pf <- ggarrange(boxplot_pf, boxplot_z_pf,ncol = 2, nrow = 1)
-    annotate_figure(boxplots_pf, top = text_grob("Boxplot/Vioplot do Preço de Fechamento\ne Preço de Fechamento 
-    Padronizado", color = "Black", face = "bold", size = 14), bottom = text_grob("Fonte: https://finance.yahoo.com/", 
+    annotate_figure(boxplots_pf, top = 
+      text_grob("Boxplot/Vioplot do Preço de Fechamento\ne Preço de Fechamento 
+    Padronizado", color = "Black", face = "bold", size = 14), 
+      bottom = text_grob("Fonte: https://finance.yahoo.com/", 
     color = "black", hjust = 1.02, x = 1,size = 10))
     
     boxplot_retorno <- ggplot(data = retorno_pf, aes(x = "", y = 100*retorno_pf)) +
@@ -121,8 +125,10 @@ analize <- function(stdpoors, preco_fechamento, name){
                                    scale_y_continuous(breaks = seq(-3, 11, by = 2))
     
     boxplots_retorno <- ggarrange(boxplot_retorno, boxplot_z_retorno_pf,ncol = 2, nrow = 1)
-    annotate_figure(boxplots_retorno, top = text_grob("Boxplot/Vioplot do Retorno\ne Retorno Padronizado", 
-    color = "Black", face = "bold", size = 14),bottom = text_grob("Fonte: https://finance.yahoo.com/", 
+    annotate_figure(boxplots_retorno, top = 
+                      text_grob("Boxplot/Vioplot do Retorno\ne Retorno Padronizado", 
+    color = "Black", face = "bold", size = 14),bottom = 
+      text_grob("Fonte: https://finance.yahoo.com/", 
     color = "black", hjust = 1.02, x = 1, size = 10))
   }
   #Histograma para dados de Preço de Fechamento e do Retorno
@@ -147,7 +153,8 @@ analize <- function(stdpoors, preco_fechamento, name){
   
     histogramas_pf <- ggarrange(histograma_pf, histograma_z_pf,ncol = 1, nrow = 2)
     annotate_figure(histogramas_pf, top = text_grob("Histograma do Preço de Fechamento", 
-    color = "Black", face = "bold", size = 14), bottom = text_grob("Fonte: https://finance.yahoo.com/", 
+    color = "Black", face = "bold", size = 14), bottom = 
+      text_grob("Fonte: https://finance.yahoo.com/", 
     color = "black", hjust = 1.02, x = 1, size = 10))
     
     
@@ -174,7 +181,8 @@ analize <- function(stdpoors, preco_fechamento, name){
   Q1_11 <- function(){
     qqplot_retorno <- ggplot(data = retorno_pf, aes(sample = 100*as.vector(retorno_pf))) +
                              stat_qq(size = 0.6) +
-                             labs(x = "Quantis Teóricos", y = "Quantis Amostrais", title = "QQPlot do Retorno (%)") +
+                             labs(x = "Quantis Teóricos", y = "Quantis Amostrais", 
+                                  title = "QQPlot do Retorno (%)") +
                              theme(plot.title = element_text(hjust = 0.5)) +
                              scale_y_continuous(breaks = seq(-17, 15, by = 3))
     qqplot_retorno
@@ -182,8 +190,10 @@ analize <- function(stdpoors, preco_fechamento, name){
   #QQLine do Retorno (fazer junto com o QQPlot)
   Q1_12 <- function(){
     histograma_retorno_qqplot <- ggplot(data = retorno_pf,aes(x = 100*retorno_pf)) +
-                                      geom_histogram(aes(y=..density..),color="blue", fill = "white", bins = 25) +
-                                      stat_function(fun = dnorm, args = list(mean = mean(100*retorno_pf), 
+                                      geom_histogram(aes(y=..density..),color="blue", 
+                                                     fill = "white", bins = 25) +
+                                      stat_function(fun = dnorm, args = 
+                                                      list(mean = mean(100*retorno_pf), 
                                       sd = sd(100*retorno_pf)),col="red",lwd=1)+
                                       theme(
                                             axis.text.x = element_blank(),
